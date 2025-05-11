@@ -13,17 +13,19 @@ export default function ProtectedRoute({
   navigation,
 }: ProtectedRouteProps) {
   const [auth, setAuth] = useState<boolean | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
       const storedToken = await SecureStore.getItemAsync("userToken");
+      setToken(storedToken);
       if (!storedToken) {
         setAuth(false);
         return;
       }
       try {
         const res = await axios.get(
-          "https://api-native.onrender.com/api/auth/check",
+          "https://api-native.onrender.com/auth/check",
           {
             headers: { Authorization: `Bearer ${storedToken}` },
           }
