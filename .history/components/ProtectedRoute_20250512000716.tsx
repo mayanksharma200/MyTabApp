@@ -22,12 +22,9 @@ export default function ProtectedRoute({
         return;
       }
       try {
-        const res = await axios.get(
-          "https://api-native.onrender.com/api/auth/check",
-          {
-            headers: { Authorization: `Bearer ${storedToken}` },
-          }
-        );
+        const res = await axios.get("http://192.168.1.5:9000/api/auth/check", {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
         setAuth(res.status === 200);
       } catch {
         setAuth(false);

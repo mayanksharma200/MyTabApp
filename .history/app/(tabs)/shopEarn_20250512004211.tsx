@@ -71,7 +71,7 @@ export default function ShopEarn() {
         setError(null);
 
         const offersRes = await axios.get(
-          "https://api-native.onrender.com/api/posts/shopEarn/offers",
+          "http://192.168.1.5:9000/api/posts/shopEarn/offers",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("Offers response:", offersRes.data);
@@ -91,13 +91,13 @@ export default function ShopEarn() {
         setOffers(mappedOffers);
 
         const rewardsRes = await axios.get(
-          "https://api-native.onrender.com/api/shopEarn/rewards",
+          "http://192.168.1.5:9000/api/shopEarn/rewards",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setRewards(rewardsRes.data?.data?.totalRewards ?? 0);
 
         const redemptionsRes = await axios.get(
-          "https://api-native.onrender.com/api/shopEarn/redemptions",
+          "http://192.168.1.5:9000/api/shopEarn/redemptions",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setRedemptions(redemptionsRes.data?.data?.redemptions ?? []);
@@ -115,13 +115,13 @@ export default function ShopEarn() {
   const handleViewOffer = async (offer: Offer) => {
     try {
       await axios.post(
-        "https://api-native.onrender.com/api/shopEarn/trackClick",
+        "http://192.168.1.5:9000/api/shopEarn/trackClick",
         { offerId: offer._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // Refresh rewards after click
       const rewardsRes = await axios.get(
-        "https://api-native.onrender.com/api/shopEarn/rewards",
+        "http://192.168.1.5:9000/api/shopEarn/rewards",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setRewards(rewardsRes.data?.data?.totalRewards ?? 0);
@@ -153,7 +153,7 @@ export default function ShopEarn() {
 
     try {
       await axios.post(
-        "https://api-native.onrender.com/api/shopEarn/redeem",
+        "http://192.168.1.5:9000/api/shopEarn/redeem",
         {
           points: pointsToRedeem,
           rewardType: "voucher",
@@ -167,10 +167,10 @@ export default function ShopEarn() {
       setCouponCode("");
 
       const [rewardsRes, redemptionsRes] = await Promise.all([
-        axios.get("https://api-native.onrender.com/api/shopEarn/rewards", {
+        axios.get("http://192.168.1.5:9000/api/shopEarn/rewards", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("https://api-native.onrender.com/api/shopEarn/redemptions", {
+        axios.get("http://192.168.1.5:9000/api/shopEarn/redemptions", {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);

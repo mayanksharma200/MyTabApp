@@ -26,7 +26,7 @@ export default function UserSignIn() {
     setError("");
     setLoading(true);
     try {
-      const response = await axios.post("https://api-native.onrender.com/api/auth/signin", {
+      const response = await axios.post("http://192.168.1.5:9000/api/auth/signin", {
         email,
         password,
       });

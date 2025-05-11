@@ -65,54 +65,56 @@ export default function ShopEarn() {
   useEffect(() => {
     if (!token) return;
 
-const fetchData = async () => {
-  try {
-    setLoading(true);
-    setError(null);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-    const offersRes = await axios.get(
-      "https://api-native.onrender.com/api/posts/shopEarn/offers",
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    console.log("Full offers response data:", offersRes.data);
+        const offersRes = await axios.get(
+          "http://192.168.1.5:9000/api/posts/shopEarn/offers",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("Full offers response data:", offersRes.data);
 
-    // Adjust this based on actual response structure
-    const offersRaw =
-      offersRes.data?.data?.offers || offersRes.data?.offers || offersRes.data;
+        // Adjust this based on actual response structure
+        const offersRaw =
+          offersRes.data?.data?.offers ||
+          offersRes.data?.offers ||
+          offersRes.data;
 
-    console.log("Parsed offersRaw:", offersRaw);
+        console.log("Parsed offersRaw:", offersRaw);
 
-    if (!Array.isArray(offersRaw)) {
-      throw new Error("Offers data is not an array");
-    }
+        if (!Array.isArray(offersRaw)) {
+          throw new Error("Offers data is not an array");
+        }
 
-    const mappedOffers = offersRaw.map((offer: any) => ({
-      _id: offer._id ?? Math.random().toString(),
-      title: offer.title ?? "No Title",
-      description: offer.description ?? "No Description",
-      url: offer.url ?? "",
-    }));
+        const mappedOffers = offersRaw.map((offer: any) => ({
+          _id: offer._id ?? Math.random().toString(),
+          title: offer.title ?? "No Title",
+          description: offer.description ?? "No Description",
+          url: offer.url ?? "",
+        }));
 
-    setOffers(mappedOffers);
+        setOffers(mappedOffers);
 
-    const rewardsRes = await axios.get(
-      "https://api-native.onrender.com/api/shopEarn/rewards",
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    setRewards(rewardsRes.data?.data?.totalRewards ?? 0);
+        const rewardsRes = await axios.get(
+          "http://192.168.1.5:9000/api/shopEarn/rewards",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setRewards(rewardsRes.data?.data?.totalRewards ?? 0);
 
-    const redemptionsRes = await axios.get(
-      "https://api-native.onrender.com/api/shopEarn/redemptions",
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    setRedemptions(redemptionsRes.data?.data?.redemptions ?? []);
-  } catch (err) {
-    console.error("Error fetching ShopEarn data:", err);
-    setError("Failed to load offers, rewards, or redemptions.");
-  } finally {
-    setLoading(false);
-  }
-};
+        const redemptionsRes = await axios.get(
+          "http://192.168.1.5:9000/api/shopEarn/redemptions",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setRedemptions(redemptionsRes.data?.data?.redemptions ?? []);
+      } catch (err) {
+        console.error("Error fetching ShopEarn data:", err);
+        setError("Failed to load offers, rewards, or redemptions.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchData();
   }, [token]);
@@ -120,13 +122,13 @@ const fetchData = async () => {
   const handleViewOffer = async (offer: Offer) => {
     try {
       await axios.post(
-        "https://api-native.onrender.com/api/shopEarn/trackClick",
+        "http://192.168.1.5:9000/api/shopEarn/trackClick",
         { offerId: offer._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // Refresh rewards after click
       const rewardsRes = await axios.get(
-        "https://api-native.onrender.com/api/shopEarn/rewards",
+        "http://192.168.1.5:9000/api/shopEarn/rewards",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setRewards(rewardsRes.data?.data?.totalRewards ?? 0);
@@ -158,7 +160,7 @@ const fetchData = async () => {
 
     try {
       await axios.post(
-        "https://api-native.onrender.com/api/shopEarn/redeem",
+        "http://192.168.1.5:9000/api/shopEarn/redeem",
         {
           points: pointsToRedeem,
           rewardType: "voucher",
@@ -172,10 +174,10 @@ const fetchData = async () => {
       setCouponCode("");
 
       const [rewardsRes, redemptionsRes] = await Promise.all([
-        axios.get("https://api-native.onrender.com/api/shopEarn/rewards", {
+        axios.get("http://192.168.1.5:9000/api/shopEarn/rewards", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("https://api-native.onrender.com/api/shopEarn/redemptions", {
+        axios.get("http://192.168.1.5:9000/api/shopEarn/redemptions", {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
