@@ -1,18 +1,18 @@
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import {
-  View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
+  View,
 } from "react-native";
-import axios from "axios";
-import * as SecureStore from "expo-secure-store";
-import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { setToken } from "../"; // Adjust path as needed
 
@@ -40,7 +40,7 @@ export default function SignIn() {
     try {
       // Sign in to get token
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         { email, password }
       );
 
@@ -52,7 +52,7 @@ export default function SignIn() {
       }
 
       // Verify token by calling /me endpoint
-      const meRes = await axios.get("http://192.168.1.5:9000/api/auth/me", {
+      const meRes = await axios.get("http://192.168.1.7:9000/api/auth/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

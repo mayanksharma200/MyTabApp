@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-  Modal,
-  TextInput,
-  Alert,
-  Dimensions,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import {
+    ActivityIndicator,
+    Alert,
+    Dimensions,
+    Modal,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -51,7 +51,7 @@ export default function Navbar() {
     const fetchUser = async () => {
       setLoadingUser(true);
       try {
-        const res = await axios.get("http://192.168.1.5:9000/api/auth/me", {
+        const res = await axios.get("http://192.168.1.7:9000/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status === 200 && res.data?.email) {
@@ -82,7 +82,7 @@ export default function Navbar() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         {
           email,
           password,

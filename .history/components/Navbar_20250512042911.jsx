@@ -5,7 +5,9 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Animated,
   Dimensions,
+  Easing,
   Modal,
   Platform,
   ScrollView,
@@ -14,11 +16,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Animated,
-  Easing,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import { setToken, clearToken } from "../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearToken, setToken } from "../store/authSlice";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -61,7 +61,7 @@ export default function Navbar() {
     const fetchUser = async () => {
       setLoadingUser(true);
       try {
-        const res = await axios.get("http://192.168.1.5:9000/api/auth/me", {
+        const res = await axios.get("http://192.168.1.7:9000/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status === 200 && res.data?.email) {
@@ -102,7 +102,7 @@ export default function Navbar() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         {
           email,
           password,
@@ -156,34 +156,107 @@ export default function Navbar() {
     );
   }
 
-return (
-  <>
-    <View style={styles.navbar}>
-      <Text style={styles.logo}>OffersConsole</Text>
+  return (
+    <>
+      <View style={styles.navbar}>
+        <Text style={styles.logo}>OffersConsole</Text>
 
-      {windowWidth < 600 ? (
+        {windowWidth < 600 ? (
+          <TouchableOpacity
+            onPress={() => setMenuOpen(true)}
+            style={styles.hamburger}
+            accessibilityLabel="Open menu"
+          >
+            <Text style={styles.hamburgerText}>☰</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.navItems}>
+            {navItems.map((item) => (
+              <TouchableOpacity
+                key={item.type}
+                onPress={() => setSelectedType(item.type)}
+                style={[
+                  styles.navItem,
+                  selectedType === item.type && styles.navItemActive,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.navText,
+                    selectedType === item.type && styles.navTextActive,
+                  ]}
+                >
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+
+            {user ? (
+              <TouchableOpacity
+                onPress={() => setMenuOpen(true)}
+                style={styles.userButton}
+              >
+                <View style={styles.avatar}>
+                  <Text style={styles.avatarText}>
+                    {user.email.charAt(0).toUpperCase()}
+                  </Text>
+                </View>
+                <Text style={styles.userEmail}>{user.email}</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => setSignInVisible(true)}
+                style={styles.signInButton}
+              >
+                <Text style={styles.signInText}>Sign In</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+      </View>
+
+      {/* Side Menu Overlay */}
+      {menuOpen && (
         <TouchableOpacity
-          onPress={() => setMenuOpen(true)}
-          style={styles.hamburger}
-          accessibilityLabel="Open menu"
-        >
-          <Text style={styles.hamburgerText}>☰</Text>
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.navItems}>
+          style={styles.overlay}
+          activeOpacity={1}
+          onPress={() => setMenuOpen(false)}
+        />
+      )}
+
+      {/* Side Menu */}
+      <Animated.View
+        style={[
+          styles.sideMenu,
+          {
+            transform: [{ translateX: slideAnim }],
+          },
+        ]}
+      >
+        <View style={styles.sideMenuHeader}>
+          <Text style={styles.sideMenuTitle}>Menu</Text>
+          <TouchableOpacity onPress={() => setMenuOpen(false)}>
+            <Text style={styles.closeButton}>✕</Text>
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView style={styles.sideMenuContent}>
           {navItems.map((item) => (
             <TouchableOpacity
               key={item.type}
-              onPress={() => setSelectedType(item.type)}
+              onPress={() => {
+                setSelectedType(item.type);
+                setMenuOpen(false);
+              }}
               style={[
-                styles.navItem,
-                selectedType === item.type && styles.navItemActive,
+                styles.sideMenuItem,
+                selectedType === item.type && styles.sideMenuItemActive,
               ]}
             >
               <Text
                 style={[
-                  styles.navText,
-                  selectedType === item.type && styles.navTextActive,
+                  styles.sideMenuText,
+                  selectedType === item.type && styles.sideMenuTextActive,
                 ]}
               >
                 {item.name}
@@ -192,164 +265,91 @@ return (
           ))}
 
           {user ? (
-            <TouchableOpacity
-              onPress={() => setMenuOpen(true)}
-              style={styles.userButton}
-            >
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>
-                  {user.email.charAt(0).toUpperCase()}
-                </Text>
+            <>
+              <View style={styles.userInfoSideMenu}>
+                <View style={styles.avatarLarge}>
+                  <Text style={styles.avatarTextLarge}>
+                    {user.email.charAt(0).toUpperCase()}
+                  </Text>
+                </View>
+                <Text style={styles.userEmailSideMenu}>{user.email}</Text>
               </View>
-              <Text style={styles.userEmail}>{user.email}</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleLogout}
+                style={styles.logoutButtonSideMenu}
+              >
+                <Text style={styles.logoutTextSideMenu}>Logout</Text>
+              </TouchableOpacity>
+            </>
           ) : (
             <TouchableOpacity
-              onPress={() => setSignInVisible(true)}
-              style={styles.signInButton}
+              onPress={() => {
+                setSignInVisible(true);
+                setMenuOpen(false);
+              }}
+              style={styles.sideMenuItem}
             >
-              <Text style={styles.signInText}>Sign In</Text>
+              <Text style={styles.sideMenuText}>Sign In</Text>
             </TouchableOpacity>
           )}
-        </View>
-      )}
-    </View>
+        </ScrollView>
+      </Animated.View>
 
-    {/* Side Menu Overlay */}
-    {menuOpen && (
-      <TouchableOpacity
-        style={styles.overlay}
-        activeOpacity={1}
-        onPress={() => setMenuOpen(false)}
-      />
-    )}
+      <Modal
+        visible={signInVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setSignInVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Sign In</Text>
 
-    {/* Side Menu */}
-    <Animated.View
-      style={[
-        styles.sideMenu,
-        {
-          transform: [{ translateX: slideAnim }],
-        },
-      ]}
-    >
-      <View style={styles.sideMenuHeader}>
-        <Text style={styles.sideMenuTitle}>Menu</Text>
-        <TouchableOpacity onPress={() => setMenuOpen(false)}>
-          <Text style={styles.closeButton}>✕</Text>
-        </TouchableOpacity>
-      </View>
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-      <ScrollView style={styles.sideMenuContent}>
-        {navItems.map((item) => (
-          <TouchableOpacity
-            key={item.type}
-            onPress={() => {
-              setSelectedType(item.type);
-              setMenuOpen(false);
-            }}
-            style={[
-              styles.sideMenuItem,
-              selectedType === item.type && styles.sideMenuItemActive,
-            ]}
-          >
-            <Text
-              style={[
-                styles.sideMenuText,
-                selectedType === item.type && styles.sideMenuTextActive,
-              ]}
-            >
-              {item.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
+              editable={!loading}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+              editable={!loading}
+            />
 
-        {user ? (
-          <>
-            <View style={styles.userInfoSideMenu}>
-              <View style={styles.avatarLarge}>
-                <Text style={styles.avatarTextLarge}>
-                  {user.email.charAt(0).toUpperCase()}
-                </Text>
-              </View>
-              <Text style={styles.userEmailSideMenu}>{user.email}</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                onPress={handleSignIn}
+                style={[styles.signInButton, { flex: 1, marginRight: 8 }]}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#f59e0b" />
+                ) : (
+                  <Text style={styles.signInText}>Submit</Text>
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setSignInVisible(false)}
+                style={[styles.cancelButton, { flex: 1 }]}
+                disabled={loading}
+              >
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={handleLogout}
-              style={styles.logoutButtonSideMenu}
-            >
-              <Text style={styles.logoutTextSideMenu}>Logout</Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <TouchableOpacity
-            onPress={() => {
-              setSignInVisible(true);
-              setMenuOpen(false);
-            }}
-            style={styles.sideMenuItem}
-          >
-            <Text style={styles.sideMenuText}>Sign In</Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
-    </Animated.View>
-
-    <Modal
-      visible={signInVisible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={() => setSignInVisible(false)}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Sign In</Text>
-
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={setEmail}
-            editable={!loading}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            editable={!loading}
-          />
-
-          <View style={styles.modalButtons}>
-            <TouchableOpacity
-              onPress={handleSignIn}
-              style={[styles.signInButton, { flex: 1, marginRight: 8 }]}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#f59e0b" />
-              ) : (
-                <Text style={styles.signInText}>Submit</Text>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setSignInVisible(false)}
-              style={[styles.cancelButton, { flex: 1 }]}
-              disabled={loading}
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </Modal>
-  </>
-);
+      </Modal>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({

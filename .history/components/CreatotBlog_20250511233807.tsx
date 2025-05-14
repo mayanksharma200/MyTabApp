@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  ActivityIndicator,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Linking,
-  Dimensions,
-} from "react-native";
 import axios from "axios";
 import { Buffer } from "buffer";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Image,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const BATCH_SIZE = 6;
 const windowWidth = Dimensions.get("window").width;
@@ -62,7 +62,7 @@ export default function CreatorBlog({ selectedType }: CreatorBlogProps) {
       setError(null);
       const queryType = selectedType === "hot" ? "" : `?type=${selectedType}`;
       const res = await axios.get(
-        `http://192.168.1.5:9000/api/posts/blog-content${queryType}`
+        `http://192.168.1.7:9000/api/posts/blog-content${queryType}`
       );
 
       if (res.data && res.data.articles) {

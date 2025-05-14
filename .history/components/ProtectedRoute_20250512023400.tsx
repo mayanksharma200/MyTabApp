@@ -22,7 +22,7 @@ export default function ProtectedRoute({
         return;
       }
       try {
-        const res = await axios.get("http://192.168.1.5:9000/api/auth/check", {
+        const res = await axios.get("http://192.168.1.7:9000/api/auth/check", {
           headers: { Authorization: `Bearer ${storedToken}` },
         });
         setAuth(res.status === 200);

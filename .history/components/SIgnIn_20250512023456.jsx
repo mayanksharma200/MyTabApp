@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -30,7 +30,7 @@ export default function SignIn() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         {
           email,
           password,

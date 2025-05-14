@@ -1,0 +1,16 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",                      // Ensure baseUrl is set for path aliases
+    "paths": {
+      "@/*": ["app/*"]                  // Map '@/' to 'app/' folder for cleaner imports
+    }
+  },
+  "include": [
+    "app/**/*.{ts,tsx}",                // Include all TS/TSX files in app folder
+    "components/**/*.{ts,tsx}",         // Include all TS/TSX files in components folder
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
+}

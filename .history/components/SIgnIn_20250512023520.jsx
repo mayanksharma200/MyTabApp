@@ -1,16 +1,16 @@
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
 
 export default function UserSignIn() {
   const [email, setEmail] = useState("");
@@ -25,7 +25,7 @@ export default function UserSignIn() {
     setLoading(true);
     try {
       await axios.post(
-        "http://192.168.1.5:9000/auth/signin",
+        "http://192.168.1.7:9000/auth/signin",
         { email, password },
         { withCredentials: true }
       );

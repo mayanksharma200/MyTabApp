@@ -62,7 +62,7 @@ export default function CreatorBlog({ selectedType }: CreatorBlogProps) {
       setError(null);
       const queryType = selectedType === "hot" ? "" : `?type=${selectedType}`;
       const res = await axios.get(
-        `http://192.168.1.5:9000/api/posts/blog-content${queryType}`
+        `http://192.168.1.7:9000/api/posts/blog-content${queryType}`
       );
 
       if (res.data && res.data.articles) {

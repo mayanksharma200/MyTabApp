@@ -1,18 +1,18 @@
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import {
-  View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
+  View,
 } from "react-native";
-import axios from "axios";
-import * as SecureStore from "expo-secure-store";
-import { useNavigation } from "@react-navigation/native";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -26,10 +26,13 @@ export default function SignIn() {
     setError("");
     setLoading(true);
     try {
-      const response = await axios.post("http://192.168.1.5:9000/api/auth/signin", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://192.168.1.7:9000/api/auth/signin",
+        {
+          email,
+          password,
+        }
+      );
 
       const token = response.data.token;
       if (!token) {

@@ -41,7 +41,7 @@ export default function Navbar() {
     const fetchUser = async () => {
       setLoadingUser(true);
       try {
-        const res = await axios.get("http://192.168.1.5:9000/auth/me", {
+        const res = await axios.get("http://192.168.1.7:9000/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status === 200 && res.data?.email) {
@@ -72,7 +72,7 @@ export default function Navbar() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         {
           email,
           password,

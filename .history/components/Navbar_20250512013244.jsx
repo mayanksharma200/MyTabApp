@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-  Modal,
-  TextInput,
-  Alert,
-  Dimensions,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -44,34 +44,34 @@ export default function Navbar() {
   }, []);
 
   // Fetch user info when token changes
-useEffect(() => {
-  if (!token) {
-    console.log("No token, skipping fetchUser");
-    setUser(null);
-    return;
-  }
-  console.log("Fetching user with token:", token);
-  const fetchUser = async () => {
-    setLoadingUser(true);
-    try {
-      const res = await axios.get("http://192.168.1.5:9000/api/auth/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      console.log("User info response:", res.data);
-      if (res.status === 200 && res.data?.email) {
-        setUser(res.data);
-      } else {
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Error fetching user info:", error);
+  useEffect(() => {
+    if (!token) {
+      console.log("No token, skipping fetchUser");
       setUser(null);
-    } finally {
-      setLoadingUser(false);
+      return;
     }
-  };
-  fetchUser();
-}, [token]);
+    console.log("Fetching user with token:", token);
+    const fetchUser = async () => {
+      setLoadingUser(true);
+      try {
+        const res = await axios.get("http://192.168.1.7:9000/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log("User info response:", res.data);
+        if (res.status === 200 && res.data?.email) {
+          setUser(res.data);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+        setUser(null);
+      } finally {
+        setLoadingUser(false);
+      }
+    };
+    fetchUser();
+  }, [token]);
 
   const handleSignIn = async () => {
     setError("");
@@ -87,7 +87,7 @@ useEffect(() => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         {
           email,
           password,

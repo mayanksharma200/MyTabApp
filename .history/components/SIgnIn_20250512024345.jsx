@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import {
+    ActivityIndicator,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import { useDispatch } from "react-redux";
 import { setToken } from "../store/authSlice"; // Adjust path as needed
 
@@ -29,7 +29,7 @@ export default function SignIn() {
     setError("");
     setLoading(true);
     try {
-      const response = await axios.post("http://192.168.1.5:9000/api/auth/signin", {
+      const response = await axios.post("http://192.168.1.7:9000/api/auth/signin", {
         email,
         password,
       });

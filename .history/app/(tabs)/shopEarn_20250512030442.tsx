@@ -1,5 +1,6 @@
+import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -13,7 +14,6 @@ import {
   View,
 } from "react-native";
 import { useSelector } from "react-redux";
-import { useFocusEffect } from "@react-navigation/native";
 import { RootState } from "../../store"; // Adjust path to your store
 
 interface Offer {
@@ -59,7 +59,7 @@ export default function ShopEarn() {
       setError(null);
 
       const offersRes = await axios.get(
-        "http://192.168.1.5:9000/api/posts/shopEarn/offers",
+        "http://192.168.1.7:9000/api/posts/shopEarn/offers",
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
 
@@ -82,13 +82,13 @@ export default function ShopEarn() {
       setOffers(mappedOffers);
 
       const rewardsRes = await axios.get(
-        "http://192.168.1.5:9000/api/shopEarn/rewards",
+        "http://192.168.1.7:9000/api/shopEarn/rewards",
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
       setRewards(rewardsRes.data?.data?.totalRewards ?? 0);
 
       const redemptionsRes = await axios.get(
-        "http://192.168.1.5:9000/api/shopEarn/redemptions",
+        "http://192.168.1.7:9000/api/shopEarn/redemptions",
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
       setRedemptions(redemptionsRes.data?.data?.redemptions ?? []);
@@ -120,13 +120,13 @@ export default function ShopEarn() {
     }
     try {
       await axios.post(
-        "http://192.168.1.5:9000/api/shopEarn/trackClick",
+        "http://192.168.1.7:9000/api/shopEarn/trackClick",
         { offerId: offer._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // Refresh rewards after click
       const rewardsRes = await axios.get(
-        "http://192.168.1.5:9000/api/shopEarn/rewards",
+        "http://192.168.1.7:9000/api/shopEarn/rewards",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setRewards(rewardsRes.data?.data?.totalRewards ?? 0);
@@ -163,7 +163,7 @@ export default function ShopEarn() {
 
     try {
       await axios.post(
-        "http://192.168.1.5:9000/api/shopEarn/redeem",
+        "http://192.168.1.7:9000/api/shopEarn/redeem",
         {
           points: pointsToRedeem,
           rewardType: "voucher",

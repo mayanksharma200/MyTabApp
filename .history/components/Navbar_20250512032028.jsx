@@ -3,22 +3,22 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  Dimensions,
-  Modal,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    Dimensions,
+    Modal,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store"; // Adjust path to your store
-import { setToken, clearToken } from "../store/authSlice"; // Adjust path
-import { setUser, clearUser } from "../store/userSlice"; // Adjust path or remove if no user slice
+import { clearToken, setToken } from "../store/authSlice"; // Adjust path
+import { clearUser, setUser } from "../store/userSlice"; // Adjust path or remove if no user slice
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -60,7 +60,7 @@ export default function Navbar() {
     const fetchUser = async () => {
       setLoadingUser(true);
       try {
-        const res = await axios.get("http://192.168.1.5:9000/api/auth/me", {
+        const res = await axios.get("http://192.168.1.7:9000/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status === 200 && res.data?.email) {
@@ -91,7 +91,7 @@ export default function Navbar() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         {
           email,
           password,

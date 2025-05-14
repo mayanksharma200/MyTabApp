@@ -5,7 +5,9 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Animated,
   Dimensions,
+  Easing,
   Modal,
   Platform,
   ScrollView,
@@ -14,11 +16,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Animated,
-  Easing,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import { setToken, clearToken } from "../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearToken, setToken } from "../store/authSlice";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -60,7 +60,7 @@ export default function Navbar({ selectedType, setSelectedType }) {
     const fetchUser = async () => {
       setLoadingUser(true);
       try {
-        const res = await axios.get("http://192.168.1.5:9000/api/auth/me", {
+        const res = await axios.get("http://192.168.1.7:9000/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status === 200 && res.data?.email) {
@@ -101,7 +101,7 @@ export default function Navbar({ selectedType, setSelectedType }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         {
           email,
           password,
@@ -379,12 +379,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flex: 1, // take available space to center logo
   },
-hamburger: {
-  padding: 2,
-  position: "absolute",
-  right: 20,
-  top: Platform.OS === "ios" ? 35 : 15,
-},
+  hamburger: {
+    padding: 2,
+    position: "absolute",
+    right: 20,
+    top: Platform.OS === "ios" ? 35 : 15,
+  },
   hamburgerText: {
     fontSize: 30,
     color: "#fff",

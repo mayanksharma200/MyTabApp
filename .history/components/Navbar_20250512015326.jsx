@@ -17,7 +17,6 @@ import {
 } from "react-native";
 import { AuthContext } from "../components";
 
-
 const windowWidth = Dimensions.get("window").width;
 
 export default function Navbar() {
@@ -33,7 +32,7 @@ export default function Navbar() {
 
   // Removed type annotations here
   const [user, setUser] = useState(null);
-const { token, setToken } = useContext(AuthContext);
+  const { token, setToken } = useContext(AuthContext);
   const [loadingUser, setLoadingUser] = useState(false);
 
   // Load token from secure storage on mount
@@ -56,7 +55,7 @@ const { token, setToken } = useContext(AuthContext);
     const fetchUser = async () => {
       setLoadingUser(true);
       try {
-        const res = await axios.get("http://192.168.1.5:9000/api/auth/me", {
+        const res = await axios.get("http://192.168.1.7:9000/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("User info response:", res.data);
@@ -89,7 +88,7 @@ const { token, setToken } = useContext(AuthContext);
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         {
           email,
           password,

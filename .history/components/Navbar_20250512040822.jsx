@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { LinearGradient } from "expo-linear-gradient";
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,9 +16,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import { setToken, clearToken } from "../store/authSlice"; // Adjust path
-import { LinearGradient } from "expo-linear-gradient";
+import { useDispatch, useSelector } from "react-redux";
+import { clearToken, setToken } from "../store/authSlice"; // Adjust path
 
 const windowWidth = Dimensions.get("window").width;
 const NAVBAR_HEIGHT = Platform.OS === "ios" ? 80 : 70;
@@ -57,7 +57,7 @@ export default function Navbar({ selectedType, setSelectedType }) {
     const fetchUser = async () => {
       setLoadingUser(true);
       try {
-        const res = await axios.get("http://192.168.1.5:9000/api/auth/me", {
+        const res = await axios.get("http://192.168.1.7:9000/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status === 200 && res.data?.email) {
@@ -88,7 +88,7 @@ export default function Navbar({ selectedType, setSelectedType }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.5:9000/api/auth/signin",
+        "http://192.168.1.7:9000/api/auth/signin",
         { email, password }
       );
 
